@@ -1,6 +1,14 @@
 import { useState } from "react";
 import "./App.css";
 
+const Button = ({ text, onClick }) => <button onClick={onClick}>{text}</button>;
+
+const StadisticLine = ({ text, value }) => (
+  <p>
+    {text}: {value}
+  </p>
+);
+
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
   const average = (good - bad) / all;
@@ -11,12 +19,12 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
       <h2>Stadistics</h2>
-      <p>good: {good}</p>
-      <p>neutral: {neutral}</p>
-      <p>bad: {bad}</p>
-      <p>all: {all}</p>
-      <p>average: {average || 0}</p>
-      <p>positive: {positive || 0} %</p>
+      <StadisticLine text="good" value={good} />
+      <StadisticLine text="neutral" value={neutral} />
+      <StadisticLine text="bad" value={bad} />
+      <StadisticLine text="all" value={all} />
+      <StadisticLine text="average" value={average || 0} />
+      <StadisticLine text="positive" value={`${positive || 0} %`} />
     </div>
   );
 };
@@ -36,9 +44,9 @@ function App() {
           justifyContent: "center",
         }}
       >
-        <button onClick={() => setGood(good + 1)}>good</button>
-        <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-        <button onClick={() => setBad(bad + 1)}>bad</button>
+        <Button text="good" onClick={() => setGood(good + 1)} />
+        <Button text="neutral" onClick={() => setNeutral(neutral + 1)} />
+        <Button text="bad" onClick={() => setBad(bad + 1)} />
       </div>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
