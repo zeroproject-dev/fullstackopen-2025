@@ -4,9 +4,10 @@ import "./App.css";
 const Button = ({ text, onClick }) => <button onClick={onClick}>{text}</button>;
 
 const StadisticLine = ({ text, value }) => (
-  <p>
-    {text}: {value}
-  </p>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 const Statistics = ({ good, neutral, bad }) => {
@@ -17,15 +18,19 @@ const Statistics = ({ good, neutral, bad }) => {
   if (all === 0) return <p>No feedback given</p>;
 
   return (
-    <div>
+    <>
       <h2>Stadistics</h2>
-      <StadisticLine text="good" value={good} />
-      <StadisticLine text="neutral" value={neutral} />
-      <StadisticLine text="bad" value={bad} />
-      <StadisticLine text="all" value={all} />
-      <StadisticLine text="average" value={average || 0} />
-      <StadisticLine text="positive" value={`${positive || 0} %`} />
-    </div>
+      <table>
+        <tbody>
+          <StadisticLine text="good" value={good} />
+          <StadisticLine text="neutral" value={neutral} />
+          <StadisticLine text="bad" value={bad} />
+          <StadisticLine text="all" value={all} />
+          <StadisticLine text="average" value={average || 0} />
+          <StadisticLine text="positive" value={`${positive || 0} %`} />
+        </tbody>
+      </table>
+    </>
   );
 };
 
