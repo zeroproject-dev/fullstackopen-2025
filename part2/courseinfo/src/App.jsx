@@ -22,6 +22,7 @@ const Content = ({ parts }) => {
 };
 
 const Total = ({ parts }) => {
+  // I already used reduce
   const total = parts.reduce((val, curr) => val + curr.exercises, 0);
 
   return <strong>Number of exercises {total}</strong>;
