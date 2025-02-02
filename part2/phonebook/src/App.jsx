@@ -21,12 +21,9 @@ const App = () => {
       return;
     }
 
-    setPersons(
-      persons.concat({
-        ...person,
-        id: persons.length + 1,
-      }),
-    );
+    axios.post("http://localhost:3001/persons", person).then((response) => {
+      setPersons(persons.concat(response.data));
+    });
   };
 
   const handleFilterChange = (e) => {
