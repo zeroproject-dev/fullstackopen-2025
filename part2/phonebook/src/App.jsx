@@ -10,7 +10,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    personService.then(setPersons);
+    personService.getAll().then(setPersons);
   }, []);
 
   const handleSubmitPerson = (person) => {
@@ -21,6 +21,12 @@ const App = () => {
 
     personService.create(person).then((newPerson) => {
       setPersons(persons.concat(newPerson));
+    });
+  };
+
+  const handleDeletePerson = (person) => {
+    personService.delete(person.id).then(() => {
+      setPersons(persons.filter((p) => p.id !== person.id));
     });
   };
 
@@ -39,7 +45,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onSubmit={handleSubmitPerson} />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={handleDeletePerson} />
     </div>
   );
 };

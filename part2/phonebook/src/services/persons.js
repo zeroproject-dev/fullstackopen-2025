@@ -18,8 +18,15 @@ const update = async (id, person) => {
     .then((response) => response.data);
 };
 
+const deletePerson = async (id) => {
+  return axios
+    .delete(`http://localhost:3001/persons/${id}`)
+    .then((response) => response.data);
+};
+
 export default {
   getAll,
   create,
   update,
+  delete: deletePerson,
 };
