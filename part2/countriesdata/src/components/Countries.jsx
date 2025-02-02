@@ -1,7 +1,13 @@
+import weatherService from "../services/weather";
 import { useEffect, useState } from "react";
 
 const Country = ({ country }) => {
+  const [weather, setWeather] = useState(null);
   const languages = Object.values(country.languages);
+
+  useEffect(() => {
+    weatherService.getWeather(country.latlng).then(setWeather);
+  }, [country]);
 
   return (
     <div>
@@ -23,6 +29,15 @@ const Country = ({ country }) => {
         width="100"
         height="62"
       />
+      <h3>Weather in {country.name.common}</h3>
+      <p>Temperature: {weather?.main?.temp ?? "Error"}</p>
+      <img
+        width="100"
+        height="100"
+        src={weatherService.getWeatherIconUrl(weather?.weather?.[0]?.icon)}
+        alt="weather icon"
+      />
+      <p>Wind: {weather?.wind?.speed} m/s</p>
     </div>
   );
 };
@@ -34,8 +49,7 @@ const CountryListItem = ({ country, onClick }) => {
 
   return (
     <div>
-      {country.name.common} &bsnp{" "}
-      <button onClick={handleShowCountry}>Show</button>
+      {country.name.common} <button onClick={handleShowCountry}>Show</button>
     </div>
   );
 };
