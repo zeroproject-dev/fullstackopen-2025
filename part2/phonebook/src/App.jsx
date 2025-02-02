@@ -5,6 +5,12 @@ import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
 import personService from "./services/persons";
 
+const confirmReplace = (person) =>
+  !!person &&
+  window.confirm(
+    `${person.name} is already added to phonebook, replace the old number with a new one?`,
+  );
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
@@ -14,14 +20,18 @@ const App = () => {
   }, []);
 
   const handleSubmitPerson = (person) => {
-    if (persons.find((p) => p.name === person.name)) {
-      alert(`${person.name} is already added to phonebook`);
-      return;
+    const personExists = persons.find((p) => p.name === person.name);
+    if (confirmReplace(personExists)) {
+      personService.update(personExists.id, person).then((updatedPerson) => {
+        setPersons(
+          persons.map((p) => (p.id !== updatedPerson.id ? p : updatedPerson)),
+        );
+      });
+    } else if (!personExists) {
+      personService.create(person).then((newPerson) => {
+        setPersons(persons.concat(newPerson));
+      });
     }
-
-    personService.create(person).then((newPerson) => {
-      setPersons(persons.concat(newPerson));
-    });
   };
 
   const handleDeletePerson = (person) => {

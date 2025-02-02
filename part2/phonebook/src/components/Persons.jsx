@@ -15,7 +15,7 @@ export const Persons = ({ persons, onDelete }) => {
   return (
     <div>
       {persons.map((p) => (
-        <Person key={p.name} person={p} onDelete={onDelete} />
+        <Person key={p.id} person={p} onDelete={onDelete} />
       ))}
     </div>
   );
