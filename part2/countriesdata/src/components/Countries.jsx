@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const Country = ({ country }) => {
   const languages = Object.values(country.languages);
 
@@ -15,12 +17,36 @@ const Country = ({ country }) => {
           <li key={language}>{language}</li>
         ))}
       </ul>
-      <img src={country.flags.png} alt={country.flags.alt} width="100" />
+      <img
+        src={country.flags.png}
+        alt={country.flags.alt}
+        width="100"
+        height="62"
+      />
+    </div>
+  );
+};
+
+const CountryListItem = ({ country, onClick }) => {
+  const handleShowCountry = () => {
+    onClick(country);
+  };
+
+  return (
+    <div>
+      {country.name.common} &bsnp{" "}
+      <button onClick={handleShowCountry}>Show</button>
     </div>
   );
 };
 
 export const Countries = ({ countries }) => {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  useEffect(() => {
+    setSelectedCountry(null);
+  }, [countries]);
+
   if (countries.length === 0) return <div>No countries found</div>;
   if (countries.length > 10)
     return <div>Too many matches, specify another filter</div>;
@@ -29,10 +55,25 @@ export const Countries = ({ countries }) => {
     return <Country country={countries[0]} />;
   }
 
+  if (selectedCountry) {
+    return (
+      <>
+        <button type="button" onClick={() => setSelectedCountry(null)}>
+          {"<-"}
+        </button>
+        <Country country={selectedCountry} />
+      </>
+    );
+  }
+
   return (
     <div>
       {countries.map((country) => (
-        <div key={country.name.official}>{country.name.common}</div>
+        <CountryListItem
+          key={country.name.official}
+          country={country}
+          onClick={setSelectedCountry}
+        />
       ))}
     </div>
   );
