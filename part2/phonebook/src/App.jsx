@@ -40,25 +40,44 @@ const App = () => {
   const handleSubmitPerson = (person) => {
     const personExists = persons.find((p) => p.name === person.name);
     if (confirmReplace(personExists)) {
-      personService.update(personExists.id, person).then((updatedPerson) => {
-        setPersons(
-          persons.map((p) => (p.id !== updatedPerson.id ? p : updatedPerson)),
-        );
-        showMessage(`Updated ${updatedPerson.name}`, true, setMessage);
-      });
+      personService
+        .update(personExists.id, person)
+        .then((updatedPerson) => {
+          setPersons(
+            persons.map((p) => (p.id !== updatedPerson.id ? p : updatedPerson)),
+          );
+          showMessage(`Updated ${updatedPerson.name}`, true, setMessage);
+        })
+        .catch((err) => {
+          showMessage(err.response.data.error, false, setMessage);
+        });
     } else if (!personExists) {
-      personService.create(person).then((newPerson) => {
-        setPersons(persons.concat(newPerson));
-        showMessage(`Added ${newPerson.name}`, true, setMessage);
-      });
+      personService
+        .create(person)
+        .then((newPerson) => {
+          setPersons(persons.concat(newPerson));
+          showMessage(`Added ${newPerson.name}`, true, setMessage);
+        })
+        .catch((err) => {
+          showMessage(err.response.data.error, false, setMessage);
+        });
     }
   };
 
   const handleDeletePerson = (person) => {
-    personService.delete(person.id).then(() => {
-      setPersons(persons.filter((p) => p.id !== person.id));
-    });
-    showMessage(`Deleted ${person.name}`, true, setMessage);
+    personService
+      .delete(person.id)
+      .then(() => {
+        setPersons(persons.filter((p) => p.id !== person.id));
+        showMessage(`Deleted ${person.name}`, true, setMessage);
+      })
+      .catch((err) => {
+        showMessage(
+          `Information of ${person.name} has already been removed from server`,
+          false,
+          setMessage,
+        );
+      });
   };
 
   const handleFilterChange = (e) => {
