@@ -28,8 +28,14 @@ app.get("/", (_, res) => {
   res.send("<h1>Hi! 😼</h1>");
 });
 
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", (_, res) => {
   res.json(persons);
+});
+
+app.get("/api/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`,
+  );
 });
 
 const PORT = 3001;
