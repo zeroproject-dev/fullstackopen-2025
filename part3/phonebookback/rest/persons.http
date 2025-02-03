@@ -1,0 +1,10 @@
+### Get all persons
+GET http://localhost:3001/api/persons
+accept: application/json
+
+### Get person by id
+GET http://localhost:3001/api/persons/1
+accept: application/json
+
+### Delete person by id
+DELETE http://localhost:3001/api/persons/1
