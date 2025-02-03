@@ -28,9 +28,24 @@ app.get("/", (_, res) => {
   res.send("<h1>Hi! 😼</h1>");
 });
 
+//INFO: Persons CRUD
 app.get("/api/persons", (_, res) => {
   res.json(persons);
 });
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+
+  if (isNaN(Number(id)))
+    return res.status(400).json({ error: "Error formatting the id" });
+
+  const person = persons.find((person) => person.id === Number(id));
+
+  if (person) res.json(person);
+  else res.status(404).end();
+});
+
+//INFO: End persons CRUD
 
 app.get("/api/info", (req, res) => {
   res.send(
