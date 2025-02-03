@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     id: 1,
@@ -54,6 +56,27 @@ app.delete("/api/persons/:id", (req, res) => {
   persons = persons.filter((person) => person.id !== Number(id));
 
   res.status(204).end();
+});
+
+const generateId = (n = 1000) => {
+  let id = Math.floor(Math.random() * n);
+  while (persons.some((person) => person.id === id)) {
+    id = Math.floor(Math.random() * n);
+  }
+  return id;
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body?.name || !body?.number) {
+    return res.status(400).json({ error: "Missing name or number" });
+  }
+
+  body.id = generateId();
+
+  persons = persons.concat(body);
+
+  res.json(body);
 });
 //INFO: End persons CRUD
 

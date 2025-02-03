@@ -8,3 +8,13 @@ accept: application/json
 
 ### Delete person by id
 DELETE http://localhost:3001/api/persons/1
+
+### Add person
+POST http://localhost:3001/api/persons
+accept: application/json
+content-type: application/json
+
+{
+  "name": "test 2",
+  "number": "33-42-123456"
+}
