@@ -93,15 +93,16 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json({ error: "Missing name or number" });
   }
 
-  if (isUniqueName(body.name)) {
-    return res.status(400).json({ error: "Name must be unique" });
-  }
+  // INFO: for later
+  // if (isUniqueName(body.name)) {
+  //   return res.status(400).json({ error: "Name must be unique" });
+  // }
 
-  body.id = generateId();
-
-  persons = persons.concat(body);
-
-  res.json(body);
+  Person(body)
+    .save()
+    .then((person) => {
+      res.json(person);
+    });
 });
 //INFO: End persons CRUD
 
