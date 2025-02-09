@@ -1,7 +1,10 @@
+require("dotenv").config();
+
 const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const Person = require("./models/person");
 
 app.use(express.json());
 app.use(cors());
@@ -44,19 +47,22 @@ app.get("/", (_, res) => {
 
 //INFO: Persons CRUD
 app.get("/api/persons", (_, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
 
-  if (isNaN(Number(id)))
-    return res.status(400).json({ error: "Error formatting the id" });
-
-  const person = persons.find((person) => person.id === Number(id));
-
-  if (person) res.json(person);
-  else res.status(404).end();
+  Person.findById(id)
+    .then((person) => {
+      res.json(person);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(404).end();
+    });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -100,9 +106,11 @@ app.post("/api/persons", (req, res) => {
 //INFO: End persons CRUD
 
 app.get("/api/info", (req, res) => {
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`,
-  );
+  Person.countDocuments({}).then((count) => {
+    res.send(
+      `<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`,
+    );
+  });
 });
 
 const PORT = process.env.PORT || 3001;
