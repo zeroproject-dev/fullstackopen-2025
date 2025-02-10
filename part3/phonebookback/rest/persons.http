@@ -6,6 +6,10 @@ accept: application/json
 GET http://localhost:3001/api/persons/67a8d1e7bbec185409954757
 accept: application/json
 
+### Get person by Error id
+GET http://localhost:3001/api/persons/2039nca
+accept: application/json
+
 ### Delete person by id
 DELETE http://localhost:3001/api/persons/67a8d1e7bbec185409954757
 
