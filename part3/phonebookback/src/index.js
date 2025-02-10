@@ -46,10 +46,12 @@ app.get("/", (_, res) => {
 });
 
 //INFO: Persons CRUD
-app.get("/api/persons", (_, res) => {
-  Person.find({}).then((persons) => {
-    res.json(persons);
-  });
+app.get("/api/persons", (_, res, next) => {
+  Person.find({})
+    .then((persons) => {
+      res.json(persons);
+    })
+    .catch(next);
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
@@ -96,25 +98,18 @@ app.delete("/api/persons/:id", (req, res, next) => {
     .catch(next);
 });
 
-const isUniqueName = (name) =>
-  persons.some((person) => person.name.toLowerCase() === name.toLowerCase());
-
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
   if (!body?.name || !body?.number) {
     return res.status(400).json({ error: "Missing name or number" });
   }
 
-  // INFO: for later
-  // if (isUniqueName(body.name)) {
-  //   return res.status(400).json({ error: "Name must be unique" });
-  // }
-
   Person(body)
     .save()
     .then((person) => {
       res.json(person);
-    });
+    })
+    .catch(next);
 });
 //INFO: End persons CRUD
 
