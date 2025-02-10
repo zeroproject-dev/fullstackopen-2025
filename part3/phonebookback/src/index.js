@@ -63,6 +63,29 @@ app.get("/api/persons/:id", (req, res, next) => {
     .catch(next);
 });
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  const body = req.body;
+
+  if (!body?.name || !body?.number) {
+    return res.status(400).json({ error: "Missing name or number" });
+  }
+
+  Person.findByIdAndUpdate(
+    id,
+    {
+      name: body.name,
+      number: body.number,
+    },
+    { new: true },
+  )
+    .then((updatedPerson) => {
+      if (updatedPerson !== null) res.json(updatedPerson);
+      else res.status(404).end();
+    })
+    .catch(next);
+});
+
 app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
 
