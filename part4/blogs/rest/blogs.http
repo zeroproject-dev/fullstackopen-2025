@@ -1,0 +1,15 @@
+### GET blogs
+GET http://localhost:3001/api/blogs
+Content-Type: application/json
+
+### POST create blog
+POST http://localhost:3001/api/blogs
+accept: application/json
+content-type: application/json
+
+{
+  "title": "my test blog",
+  "author": "zeroproject",
+  "url": "https://zeroproject.dev",
+  "likes": "0"
+}
