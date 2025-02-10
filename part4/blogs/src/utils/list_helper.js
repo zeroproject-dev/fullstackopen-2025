@@ -1,3 +1,6 @@
+const _ = require("lodash");
+
+// eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
   return 1;
 };
@@ -11,8 +14,19 @@ const favoriteBlog = (blogs) => {
   return blogs.find((blog) => blog.likes === maxLikes);
 };
 
+const mostBlogs = (blogs) => {
+  const authorWithMostBlogs = _.chain(blogs)
+    .countBy("author")
+    .map((blogs, author) => ({ author, blogs }))
+    .maxBy("blogs")
+    .value();
+
+  return authorWithMostBlogs;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
