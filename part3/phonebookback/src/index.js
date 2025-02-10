@@ -62,7 +62,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
 
   Person.findByIdAndDelete(id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch(next);
@@ -80,7 +80,7 @@ app.post("/api/persons", (req, res, next) => {
 });
 //INFO: End persons CRUD
 
-app.get("/api/info", (req, res) => {
+app.get("/api/info", (_, res) => {
   Person.countDocuments({}).then((count) => {
     res.send(
       `<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`,
