@@ -32,3 +32,13 @@ content-type: application/json
   "name": "test",
   "number": "33-42-123456"
 }
+
+### Add Wrong person
+POST http://localhost:3001/api/persons
+accept: application/json
+content-type: application/json
+
+{
+  "name": "test",
+  "number": "33-42-123456"
+}
