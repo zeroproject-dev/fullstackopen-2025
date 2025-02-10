@@ -65,15 +65,14 @@ app.get("/api/persons/:id", (req, res) => {
     });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
 
-  if (isNaN(Number(id)))
-    return res.status(400).json({ error: "Error formatting the id" });
-
-  persons = persons.filter((person) => person.id !== Number(id));
-
-  res.status(204).end();
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch(next);
 });
 
 const generateId = (n = 1000) => {

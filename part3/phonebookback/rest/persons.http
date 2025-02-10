@@ -3,11 +3,11 @@ GET http://localhost:3001/api/persons
 accept: application/json
 
 ### Get person by id
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/67a8d1e7bbec185409954757
 accept: application/json
 
 ### Delete person by id
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/67a8d1e7bbec185409954757
 
 ### Add person
 POST http://localhost:3001/api/persons
