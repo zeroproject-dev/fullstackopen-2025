@@ -34,10 +34,20 @@ const mostLikes = (blogs) => {
   return authorWithMostLikes;
 };
 
+const initialBlogs = [
+  {
+    title: "Test blog",
+    likes: 0,
+    author: "zeroproject",
+    url: "https://zeroproject.dev",
+  },
+];
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
   mostLikes,
+  initialBlogs,
 };
