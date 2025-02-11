@@ -11,7 +11,7 @@ mongoose.connect(mongoUrl);
 app.use(cors());
 app.use(express.json());
 
-app.use(require("./controllers/blogs"));
+app.use("/api/blogs", require("./controllers/blogs"));
 
 app.use(require("./middlewares/unknown-route"));
 app.use(require("./middlewares/error"));

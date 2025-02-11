@@ -98,6 +98,28 @@ describe("test delete endpoint", () => {
   });
 });
 
+describe("test update endpoint", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+    await Blog.insertMany(listHelper.initialBlogs);
+  });
+
+  test("update a blog with the id", async () => {
+    let blogs = (await api.get("/api/blogs")).body;
+    const prevBlog = blogs[0];
+
+    prevBlog.likes += 1;
+
+    const response = await api
+      .put(`/api/blogs/${prevBlog.id}`)
+      .send(prevBlog)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    assert.deepStrictEqual(response.body, prevBlog);
+  });
+});
+
 after(() => {
   mongoose.connection.close();
 });
