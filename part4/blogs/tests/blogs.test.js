@@ -52,7 +52,7 @@ test("a valid blog can be added", async () => {
   assert(blogs.length === listHelper.initialBlogs.length + 1);
 });
 
-test.only("a blog without likes field will default to 0", async () => {
+test("a blog without likes field will default to 0", async () => {
   const newBlog = {
     title: "Test blog without likes",
     author: "zeroproject",
@@ -70,6 +70,14 @@ test.only("a blog without likes field will default to 0", async () => {
     likes: 0,
     id: response.body.id,
   });
+});
+
+test.only("a blog without title and url will return 400", async () => {
+  const newBlog = {
+    author: "zeroproject",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
 });
 
 after(() => {
