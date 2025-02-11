@@ -14,7 +14,7 @@ beforeEach(async () => {
   await Blog.insertMany(listHelper.initialBlogs);
 });
 
-test.only("blogs are returned as json array", async () => {
+test("blogs are returned as json array", async () => {
   const response = await api
     .get("/api/blogs")
     .expect(200)
@@ -23,7 +23,7 @@ test.only("blogs are returned as json array", async () => {
   assert(response.body.length === listHelper.initialBlogs.length);
 });
 
-test.only("blogs id field is named id", async () => {
+test("blogs id field is named id", async () => {
   const response = await api.get("/api/blogs");
   response.body.forEach((blog) => {
     assert(!!blog.id);
@@ -31,7 +31,7 @@ test.only("blogs id field is named id", async () => {
   });
 });
 
-test.only("a valid blog can be added", async () => {
+test("a valid blog can be added", async () => {
   const newBlog = {
     title: "Test 2 blog",
     likes: 3,
@@ -50,6 +50,26 @@ test.only("a valid blog can be added", async () => {
   const blogs = await Blog.find({});
 
   assert(blogs.length === listHelper.initialBlogs.length + 1);
+});
+
+test.only("a blog without likes field will default to 0", async () => {
+  const newBlog = {
+    title: "Test blog without likes",
+    author: "zeroproject",
+    url: "https://zeroproject.dev",
+  };
+
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  assert.deepStrictEqual(response.body, {
+    ...newBlog,
+    likes: 0,
+    id: response.body.id,
+  });
 });
 
 after(() => {
