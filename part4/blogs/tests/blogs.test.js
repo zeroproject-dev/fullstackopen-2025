@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require("node:test");
+const { test, after, beforeEach, describe } = require("node:test");
 const listHelper = require("../src/utils/list_helper");
 const assert = require("node:assert");
 const app = require("../src/app");
@@ -72,12 +72,30 @@ test("a blog without likes field will default to 0", async () => {
   });
 });
 
-test.only("a blog without title and url will return 400", async () => {
+test("a blog without title and url will return 400", async () => {
   const newBlog = {
     author: "zeroproject",
   };
 
   await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
+describe("test delete endpoint", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+    await Blog.insertMany(listHelper.initialBlogs);
+  });
+
+  test("delete a blog with the id", async () => {
+    let blogs = await Blog.find({});
+    const blogId = blogs[0]._id.toString();
+
+    await api.delete(`/api/blogs/${blogId}`).expect(204);
+
+    blogs = await Blog.find({});
+
+    assert.strictEqual(blogs.length, 0);
+  });
 });
 
 after(() => {
