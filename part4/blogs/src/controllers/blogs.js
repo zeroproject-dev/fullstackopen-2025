@@ -35,10 +35,16 @@ blogRouter.post("/", async (request, response) => {
 
 blogRouter.delete("/:id", async (request, response) => {
   const id = request.params.id;
+  const tokenPayload = jwt.verify(request.token, config.jwtSecret);
 
-  await Blog.findByIdAndDelete(id);
+  const blog = await Blog.findById(id);
 
-  response.status(204).end();
+  if (blog.user?.toString() === tokenPayload.id) {
+    await Blog.findByIdAndDelete(id);
+    return response.status(204).end();
+  } else {
+    return response.status(401).json({ error: "Token missing or invalid" });
+  }
 });
 
 blogRouter.put("/:id", async (request, response) => {
