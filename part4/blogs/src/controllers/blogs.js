@@ -14,15 +14,7 @@ blogRouter.get("/", async (request, response) => {
 });
 
 blogRouter.post("/", async (request, response) => {
-  let token = null;
-
-  const { authorization } = request.headers;
-
-  if (authorization?.startsWith("Bearer ")) {
-    token = authorization.substring(7);
-  }
-
-  const tokenPayload = jwt.verify(token, config.jwtSecret);
+  const tokenPayload = jwt.verify(request.token, config.jwtSecret);
 
   const user = await User.findById(tokenPayload.id);
 

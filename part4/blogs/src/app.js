@@ -10,6 +10,7 @@ mongoose.connect(mongoUrl);
 
 app.use(cors());
 app.use(express.json());
+app.use(require("./middlewares/token-extractor"));
 
 app.use("/api/users", require("./controllers/users"));
 app.use("/api/auth", require("./controllers/login"));
