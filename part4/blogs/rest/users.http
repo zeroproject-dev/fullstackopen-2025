@@ -12,3 +12,13 @@ content-type: application/json
   "password": "test",
   "name": "Zero Project"
 }
+
+### POST login
+POST http://localhost:3001/api/auth/login
+accept: application/json
+content-type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}

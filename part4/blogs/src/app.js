@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", require("./controllers/users"));
+app.use("/api/auth", require("./controllers/login"));
 app.use("/api/blogs", require("./controllers/blogs"));
 
 app.use(require("./middlewares/unknown-route"));
