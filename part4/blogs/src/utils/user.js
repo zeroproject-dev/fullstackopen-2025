@@ -13,7 +13,13 @@ const validateUser = (json) => {
   return null;
 };
 
-const initialUsers = [{ username: "admin", password: "admin", name: "admin" }];
+const initialUsers = [
+  {
+    username: "admin",
+    password: "$2b$10$YHj/g0ltdmuZn1Sb3XDDweOMvMzVZBxQ/3yYVDixmYUYJdmDTFF.C",
+    name: "admin",
+  },
+];
 
 module.exports = {
   validateUser,

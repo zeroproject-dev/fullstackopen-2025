@@ -8,13 +8,13 @@ const userUtils = require("../src/utils/user");
 const supertest = require("supertest");
 const api = supertest(app);
 
-describe.only("User Creations", () => {
+describe("User Creations", () => {
   beforeEach(async () => {
     await User.deleteMany({});
     await User.insertMany(userUtils.initialUsers);
   });
 
-  test.only("Post invalid user", async () => {
+  test("Post invalid user", async () => {
     let users = await User.find({});
 
     await api
@@ -28,7 +28,7 @@ describe.only("User Creations", () => {
     assert(users.length === userUtils.initialUsers.length);
   });
 
-  test.only("Post valid user", async () => {
+  test("Post valid user", async () => {
     const newUser = {
       name: "test",
       username: "test",

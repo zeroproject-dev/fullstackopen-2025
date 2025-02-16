@@ -8,10 +8,14 @@ const supertest = require("supertest");
 const api = supertest(app);
 
 const Blog = require("../src/models/blog");
+const User = require("../src/models/user");
+const userUtils = require("../src/utils/user");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(listHelper.initialBlogs);
+  await User.deleteMany({});
+  await User.insertMany(userUtils.initialUsers);
 });
 
 test("blogs are returned as json array", async () => {
@@ -31,7 +35,7 @@ test("blogs id field is named id", async () => {
   });
 });
 
-test("a valid blog can be added", async () => {
+test("a valid blog can not be added without token", async () => {
   const newBlog = {
     title: "Test 2 blog",
     likes: 3,
@@ -39,13 +43,35 @@ test("a valid blog can be added", async () => {
     url: "https://zeroproject.dev",
   };
 
-  const response = await api
+  await api
     .post("/api/blogs")
+    .send(newBlog)
+    .expect(401)
+    .expect("Content-Type", /application\/json/);
+});
+
+test("a valid blog can be added with token", async () => {
+  const newBlog = {
+    title: "Test 2 blog",
+    likes: 3,
+    author: "zeroproject",
+    url: "https://zeroproject.dev",
+  };
+
+  const loginResponse = await api
+    .post("/api/auth/login")
+    .send({
+      username: "admin",
+      password: "admin",
+    })
+    .expect(200);
+
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${loginResponse.body.token}`)
     .send(newBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
-
-  assert.deepStrictEqual(response.body, { ...newBlog, id: response.body.id });
 
   const blogs = await Blog.find({});
 
@@ -59,17 +85,22 @@ test("a blog without likes field will default to 0", async () => {
     url: "https://zeroproject.dev",
   };
 
+  const loginResponse = await api
+    .post("/api/auth/login")
+    .send({
+      username: "admin",
+      password: "admin",
+    })
+    .expect(200);
+
   const response = await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${loginResponse.body.token}`)
     .send(newBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  assert.deepStrictEqual(response.body, {
-    ...newBlog,
-    likes: 0,
-    id: response.body.id,
-  });
+  assert.strictEqual(response.body.likes, 0);
 });
 
 test("a blog without title and url will return 400", async () => {
@@ -77,20 +108,58 @@ test("a blog without title and url will return 400", async () => {
     author: "zeroproject",
   };
 
-  await api.post("/api/blogs").send(newBlog).expect(400);
+  const loginResponse = await api
+    .post("/api/auth/login")
+    .send({
+      username: "admin",
+      password: "admin",
+    })
+    .expect(200);
+
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${loginResponse.body.token}`)
+    .send(newBlog)
+    .expect(400);
 });
 
 describe("test delete endpoint", () => {
+  let token = null;
+
   beforeEach(async () => {
     await Blog.deleteMany({});
-    await Blog.insertMany(listHelper.initialBlogs);
+    await User.deleteMany({});
+    await User.insertMany(userUtils.initialUsers);
+
+    const loginResponse = await api
+      .post("/api/auth/login")
+      .send({
+        username: "admin",
+        password: "admin",
+      })
+      .expect(200);
+    token = loginResponse.body.token;
+    const jwt = require("jsonwebtoken");
+    require("dotenv").config();
+    const config = require("../src/utils/config");
+    const tokenPayload = jwt.verify(token, config.jwtSecret);
+
+    await Blog.insertMany(
+      listHelper.initialBlogs.map((blog) => ({
+        ...blog,
+        user: tokenPayload.id,
+      })),
+    );
   });
 
   test("delete a blog with the id", async () => {
     let blogs = await Blog.find({});
     const blogId = blogs[0]._id.toString();
 
-    await api.delete(`/api/blogs/${blogId}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204);
 
     blogs = await Blog.find({});
 
