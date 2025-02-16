@@ -1,0 +1,14 @@
+### GET all users
+GET http://localhost:3001/api/users
+content-type: application/json
+
+### POST Create a new user
+POST http://localhost:3001/api/users
+accept: application/json
+content-type: application/json
+
+{
+  "username": "zeroproject2",
+  "name": "Zero Project",
+  "password": "newPassword"
+}
