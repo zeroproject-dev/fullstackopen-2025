@@ -10,6 +10,8 @@ const errorHandler = (error, _, res, next) => {
     error.message.includes("E11000 duplicate key error")
   ) {
     return res.status(400).json({ error: "Username must be unique" });
+  } else if (error.name === "JsonWebTokenError") {
+    return res.status(401).json({ error: "Invalid token" });
   }
 
   next(error);

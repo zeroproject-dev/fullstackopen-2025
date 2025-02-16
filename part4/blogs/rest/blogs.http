@@ -6,9 +6,10 @@ Content-Type: application/json
 POST http://localhost:3001/api/blogs
 accept: application/json
 content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJuYW1lIjoiWmVybyBQcm9qZWN0IiwiaWQiOiI2N2IyNDY3ZWFlZDYwYjM4MjFhYWQ5MGEiLCJpYXQiOjE3Mzk3NDI2OTR9.9oPLQkkT_6f7QwfrvWrwl1NYNfRLhf5LfYoZCd17RNs
 
 {
-  "title": "my test 2 blog",
+  "title": "my test 3 blog",
   "author": "zeroproject",
   "url": "https://zeroproject.dev",
   "likes": "0"
